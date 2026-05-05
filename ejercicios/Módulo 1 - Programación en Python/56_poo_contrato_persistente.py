@@ -18,6 +18,12 @@ Duración del contrato (en meses).
 import datetime
 import csv
 
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet
+
+MESES = ('Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio',
+         'Agosto','Septiembre','Octubre','Noviembre','Diciembre')
+
 class Contrato:
     def __init__(self, nombre_casero: str, nombre_inquilino: str, 
                  fecha_inicio: datetime.date, renta_mensual: int,
@@ -55,10 +61,51 @@ class Contrato:
 
     def escribir_fichero_csv(self, nombre_fichero: str):
         with open(nombre_fichero, 'w', newline='', encoding='utf-8') as fichero:
-            field_names = self.__dict__.keys()
+            field_names = self.__dict__.keys() # Obtenemos los nombres de los atributos
             writer = csv.DictWriter(fichero, fieldnames=field_names)
-            writer.writeheader()
-            writer.writerow(self.__dict__)
+            writer.writeheader() # Escribe el encabezado
+            writer.writerow(self.__dict__) # Escribe los valores del diccionario
+
+    def escribir_fichero_pdf(self):
+        nombre_fichero = f"contrato_{self.nombre_casero.replace(' ','_')}_{self.nombre_inquilino.replace(' ','_')}.pdf"
+        
+        doc = SimpleDocTemplate(nombre_fichero)
+        estilos = getSampleStyleSheet()
+        
+        contenido = []
+
+        titulo = Paragraph(
+            "MODELO ORIENTATIVO DE CONTRATO DE ARRENDAMIENTO DE VIVIENDA",
+            estilos['Title']
+        )
+        contenido.append(titulo)
+
+        fecha = f"En Madrid, a {self.fecha_inicio.day} de {MESES[self.fecha_inicio.month-1]} de {self.fecha_inicio.year}"
+        contenido.append(Paragraph(fecha, estilos['Normal']))
+
+        contenido.append(Paragraph("REUNIDOS", estilos['Heading2']))
+
+        contenido.append(Spacer(1, 20))
+
+        primer_parrafo = f"""
+        De una parte, y como arrendador, persona física, D/Dña. {self.nombre_casero},
+        mayor de edad, domiciliado/a en ………, y con NIF nº …….... Y con datos de contacto
+        a efectos de notificaciones: correo electrónico: ……….........., y número de teléfono: ……
+        """
+
+        contenido.append(Paragraph(primer_parrafo, estilos['Normal']))
+
+        contenido.append(Spacer(1, 20))
+
+
+        segundo_parrafo = f"""
+        De otra parte, y como arrendatario, D/Dña. {self.nombre_inquilino}, mayor de edad, con NIF…...., con
+        domicilio a efectos de notificaciones en la vivienda objeto de arrendamiento. Y con datos de
+        contacto a efectos de notificaciones: correo electrónico: ………........., y número de teléfono:…..
+
+        """
+        contenido.append(Paragraph(segundo_parrafo, estilos['Normal']))
+        doc.build(contenido)
 
 contrato = Contrato(nombre_casero='Alberto',
                     nombre_inquilino='Joselín', 
@@ -77,3 +124,5 @@ pass
 contrato.escribir_fichero_texto('contrato_01.txt')
 
 contrato.escribir_fichero_csv('contrato_01.csv')
+
+contrato.escribir_fichero_pdf()
