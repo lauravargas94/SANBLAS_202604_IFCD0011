@@ -14,6 +14,7 @@ class Facturacion:
     def generar_informe_pdf(self):
         nombre_fichero = f'informe_facturacion_{self.anyo}.pdf'
         
+        # Creación del documento
         doc = SimpleDocTemplate(nombre_fichero)
         contenido = [] # List con el contenido
         
@@ -25,6 +26,16 @@ class Facturacion:
 
         trimestre_2 = Paragraph(f'Facturación T2: {self.facturacion_t2}')
         contenido.append(trimestre_2)
+
+        contenido.append(Spacer(1, 20)) # Espacio en blanco
+
+        trimestre_3 = Paragraph(f'Facturación T3: {self.facturacion_t3}')
+        contenido.append(trimestre_3)
+
+        contenido.append(Spacer(1, 20)) # Espacio en blanco
+
+        trimestre_4 = Paragraph(f'Facturación T4: {self.facturacion_t4}')
+        contenido.append(trimestre_4)
         
         # Diagrama
         self.generar_diagrama_barras()
@@ -42,6 +53,7 @@ class Facturacion:
         plt.xlabel('Trimestre')
         plt.ylabel('Facturación (€)')
         plt.savefig('figura.png')
+        plt.clf() # Borra la figura para no dibujar encima en la siguiente iteracción
 
 if __name__=='__main__':
     # Abrimos el fichero csv
