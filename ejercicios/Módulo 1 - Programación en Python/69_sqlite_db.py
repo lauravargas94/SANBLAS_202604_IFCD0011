@@ -44,10 +44,16 @@ U - UPDATE
 D - DELETE
 '''
 def create(conn: sqlite3.Connection, pelicula : Pelicula):
-    sql = f'INSERT INTO peliculas (titulo, director, anyo, plot) \
-        VALUES {pelicula.titulo, pelicula.director, pelicula.anyo, pelicula.plot}'
+    #sql = f'INSERT INTO peliculas (titulo, director, anyo, plot) \
+    #    VALUES ("{pelicula.titulo}", "{pelicula.director}", {pelicula.anyo}, "{pelicula.plot}")'
+    
+    #sql = f'INSERT INTO peliculas (titulo, director, anyo, plot) \
+    #    VALUES {pelicula.titulo, pelicula.director, pelicula.anyo, pelicula.plot}'
+    
+    sql = 'INSERT INTO peliculas (titulo, director, anyo, plot) VALUES (?, ?, ?, ?)'
+        
     c = conn.cursor()
-    c.execute(sql)
+    c.execute(sql, (pelicula.titulo, pelicula.director, pelicula.anyo, pelicula.plot))
     conn.commit()
     c.close()
 
@@ -68,14 +74,14 @@ def read_all(conn: sqlite3.Connection):
     cursor.close()
     c.close()
     return registros
-    
+
 
 if __name__=='__main__':
     print('Iniciando ejecución...')
     conn = obtener_conexion()
     crear_db(conn)
     # Creación de película
-    batman = Pelicula('Batman', 'Christopher Nolan', 2010, 'Un rico se disfraza de murciélago')
+    batman = Pelicula('Superman', 'Christopher Nolan', 2010, 'Un rico se disfraza de murciélago')
     create(conn, pelicula=batman)
     # Lectura de película
     pelicula_buscada = read(conn, id=1)
