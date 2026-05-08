@@ -50,6 +50,24 @@ def create(conn: sqlite3.Connection, pelicula : Pelicula):
     c.execute(sql)
     conn.commit()
     c.close()
+
+def read(conn: sqlite3.Connection, id: int):
+    sql = f'SELECT * FROM peliculas WHERE id={id}'
+    c = conn.cursor()
+    cursor = c.execute(sql)
+    registro = cursor.fetchone()
+    cursor.close()
+    c.close()
+    return registro
+
+def read_all(conn: sqlite3.Connection):
+    sql = f'SELECT * FROM peliculas'
+    c = conn.cursor()
+    cursor = c.execute(sql)
+    registros = cursor.fetchall()
+    cursor.close()
+    c.close()
+    return registros
     
 
 if __name__=='__main__':
@@ -59,5 +77,12 @@ if __name__=='__main__':
     # Creación de película
     batman = Pelicula('Batman', 'Christopher Nolan', 2010, 'Un rico se disfraza de murciélago')
     create(conn, pelicula=batman)
-
+    # Lectura de película
+    pelicula_buscada = read(conn, id=1)
+    print(type(pelicula_buscada))
+    print(pelicula_buscada)
+    # Lectura de todas las películas
+    peliculas_buscadas = read_all(conn)
+    print(type(peliculas_buscadas))
+    print(peliculas_buscadas)
     conn.close()
