@@ -75,20 +75,69 @@ def read_all(conn: sqlite3.Connection):
     c.close()
     return registros
 
+def update(conn: sqlite3.Connection, pelicula: Pelicula):
+    sql = f'UPDATE peliculas SET id=?, titulo=?, director=?, anyo=?, plot=? WHERE id=?'
+    valores = (pelicula.id, pelicula.titulo, pelicula.director, pelicula.anyo, pelicula.plot, pelicula.id)
+    c = conn.cursor()
+    c.execute(sql, valores)
+    c.close
+
+def delete(conn: sqlite3.Connection, id: int):
+    sql = f'DELETE FROM peliculas WHERE id=?'
+    valores = (id, )
+    c = conn.cursor()
+    c.execute(sql, valores)
+    c.close
+
+def delete_all(conn: sqlite3.Connection):
+    sql = f'DELETE FROM peliculas'
+    c = conn.cursor()
+    c.execute(sql)
+    c.close
 
 if __name__=='__main__':
     print('Iniciando ejecución...')
     conn = obtener_conexion()
     crear_db(conn)
-    # Creación de película
-    batman = Pelicula('Superman', 'Christopher Nolan', 2010, 'Un rico se disfraza de murciélago')
-    create(conn, pelicula=batman)
-    # Lectura de película
-    pelicula_buscada = read(conn, id=1)
-    print(type(pelicula_buscada))
-    print(pelicula_buscada)
-    # Lectura de todas las películas
-    peliculas_buscadas = read_all(conn)
-    print(type(peliculas_buscadas))
-    print(peliculas_buscadas)
+    print('1. Crear')
+    print('2. Leer uno')
+    print('3. Leer todos')
+    print('4. Actualizar')
+    print('5. Eliminar')
+    print('6. Borrar todo - DANGER ZONE')
+    print('0. Salir')
+    opcion = int(input('Introduce opción:'))
+    while opcion!=0:
+        match (opcion):
+            case 1:
+                # Creación de película
+                batman = Pelicula('Superman', 'Christopher Nolan', 2010, 'Un rico se disfraza de murciélago')
+                create(conn, pelicula=batman)
+            case 2:
+                # Lectura de película
+                id = int(input('Introduce id:'))
+                pelicula_buscada = read(conn, id=id)
+                print(type(pelicula_buscada))
+                print(pelicula_buscada)
+            case 3:
+                # Lectura de todas las películas
+                peliculas_buscadas = read_all(conn)
+                print(type(peliculas_buscadas))
+                print(peliculas_buscadas)
+            case 4:
+                # Modificación
+                id = int(input('Introduce id:'))
+                titulo = input('Introduce nuevo título:')
+                tupla_pelicula = read(conn, id)
+                pelicula = Pelicula(titulo=tupla_pelicula[1], director=tupla_pelicula[2],
+                                    anyo=tupla_pelicula[3], plot=tupla_pelicula[4], id=tupla_pelicula[0])
+                pelicula.titulo=titulo
+                update(conn, pelicula)
+            case 5:
+                # Modificación
+                id = int(input('Introduce id:'))
+                delete(conn, id)
+            case 6:
+                delete_all(conn)
+        opcion = int(input('Introduce opción:'))
     conn.close()
