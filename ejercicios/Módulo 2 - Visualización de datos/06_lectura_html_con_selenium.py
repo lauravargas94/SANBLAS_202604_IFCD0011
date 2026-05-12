@@ -1,6 +1,11 @@
+"""
+Selenium con Python sirve principalmente para automatizar 
+navegadores web, permitiendo simular acciones humanas como 
+hacer clics, rellenar formularios, navegar entre páginas y 
+extraer datos (web scraping). 
+"""
+
 from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
 import pandas as pd
 from io import StringIO
 import time
