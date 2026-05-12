@@ -4,7 +4,7 @@ import sqlite3
 from dataclasses import dataclass
 
 NUMERO_REGISTROS_DEFAULT = 100
-NOMBRE_DATABASE = 'db_empleados_optizado.sqlite3'
+NOMBRE_DATABASE = 'db_empleados_optimizado.sqlite3'
 SALARIO_MINIMO_DEFAULT = 18_000
 SALARIO_MAXIMO_DEFAULT = 50_000
 
