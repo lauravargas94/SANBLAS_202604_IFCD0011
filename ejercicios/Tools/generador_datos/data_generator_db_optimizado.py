@@ -48,8 +48,8 @@ categorias_programacion = [
     "DevOps Engineer"
 ]
 
-def obtener_conexion():
-    conn = sqlite3.connect(NOMBRE_DATABASE)
+def obtener_conexion(nombre_database):
+    conn = sqlite3.connect(nombre_database)
     return conn
 
 def crear_db(conn):
@@ -82,20 +82,21 @@ def insert_all(conn: sqlite3.Connection, empleados: list[Empleado]):
     conn.commit()
     c.close()
 
-numero_registros = input(f'Número de registros ({NUMERO_REGISTROS_DEFAULT}):')
-nombre_database = input(f'Nombre de la base de datos ({NOMBRE_DATABASE}):')
-salario_minimo = input(f'Salario mínimo ({SALARIO_MINIMO_DEFAULT}):')
-salario_maximo = input(f'Salario máximo ({SALARIO_MAXIMO_DEFAULT}):')
-
-numero_registros = NUMERO_REGISTROS_DEFAULT if len(numero_registros)==0 else int(numero_registros)
-nombre_database = NOMBRE_DATABASE if len(nombre_database)==0 else nombre_database
-salario_minimo = SALARIO_MINIMO_DEFAULT if len(salario_minimo)==0 else int(salario_minimo)
-salario_maximo = SALARIO_MAXIMO_DEFAULT if len(salario_maximo)==0 else int(salario_maximo)
-
 if __name__ == "__main__":
+
+    numero_registros = input(f'Número de registros ({NUMERO_REGISTROS_DEFAULT}):')
+    nombre_database = input(f'Nombre de la base de datos ({NOMBRE_DATABASE}):')
+    salario_minimo = input(f'Salario mínimo ({SALARIO_MINIMO_DEFAULT}):')
+    salario_maximo = input(f'Salario máximo ({SALARIO_MAXIMO_DEFAULT}):')
+
+    numero_registros = NUMERO_REGISTROS_DEFAULT if len(numero_registros)==0 else int(numero_registros)
+    nombre_database = NOMBRE_DATABASE if len(nombre_database)==0 else nombre_database
+    salario_minimo = SALARIO_MINIMO_DEFAULT if len(salario_minimo)==0 else int(salario_minimo)
+    salario_maximo = SALARIO_MAXIMO_DEFAULT if len(salario_maximo)==0 else int(salario_maximo)
+
     inicio = time.perf_counter()
 
-    conn = obtener_conexion()
+    conn = obtener_conexion(nombre_database)
     crear_db(conn)
     empleados = []
     for i in range(numero_registros):
