@@ -1,6 +1,14 @@
 import sqlite3
 
 '''
+CRUD:
+C - CREATE
+R - READ
+U - UPDATE
+D - DELETE
+'''
+
+'''
 db_movies.sqlite3
 
 Tabla: peliculas
@@ -36,13 +44,6 @@ def crear_db(conn):
     );''')
     c.close()
 
-'''
-CRUD:
-C - CREATE
-R - READ
-U - UPDATE
-D - DELETE
-'''
 def create(conn: sqlite3.Connection, pelicula : Pelicula):
     #sql = f'INSERT INTO peliculas (titulo, director, anyo, plot) \
     #    VALUES ("{pelicula.titulo}", "{pelicula.director}", {pelicula.anyo}, "{pelicula.plot}")'
@@ -139,5 +140,7 @@ if __name__=='__main__':
                 delete(conn, id)
             case 6:
                 delete_all(conn)
+            case _:
+                print('Opción no reconocida')
         opcion = int(input('Introduce opción:'))
     conn.close()
