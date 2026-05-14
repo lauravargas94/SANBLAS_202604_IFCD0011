@@ -7,8 +7,12 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
+from charts import ChartType, draw_chart
+
 ANCHO = 640
 ALTO = 480
+
+df = None
 
 def finish_app():
     sys.exit(0)
@@ -23,13 +27,14 @@ def set_file_name():
     entry_path.delete(0, tk.END)
     entry_path.insert(0, filename)
 
-
 def process_data():
+    global df
     nombre_fichero = entry_path.get()
     try:
         df = pd.read_csv(nombre_fichero, header=None)
         text_data.delete("1.0", tk.END)
         text_data.insert("1.0", str(df.head()))
+        messagebox.showinfo('Success', 'Data loaded successfully. Select a chart type to visualize the data.')
     except FileNotFoundError as fne:
         messagebox.showerror('Error', 'El archivo no ha sido encontrado')
     except UnicodeDecodeError as ude:
@@ -37,13 +42,6 @@ def process_data():
     except Exception as exception:
         print(exception)
         messagebox.showerror('Error', 'Ha ocurrido un error inexperado')
-    else:
-        ax.clear()
-        ax.bar(df[0], df[1], color='#2a7fb8')
-        ax.set_title('Bar chart')
-        ax.set_xlabel('Category')
-        ax.set_ylabel('Value')
-        canvas.draw()
 
 if __name__=='__main__':
     # VENTANA PRINCIPAL
@@ -64,9 +62,10 @@ if __name__=='__main__':
     
     # MENÚ TIPOS DE GRÁFICOS
     types_menu=tk.Menu(tearoff=0)
-    types_menu.add_command(label='Bars')
-    types_menu.add_command(label='Points')
-    types_menu.add_command(label='Pie')
+    types_menu.add_command(label='Bars', command=lambda: draw_chart(canvas, ax, df, ChartType.BAR))
+    types_menu.add_command(label='Scatter', command=lambda: draw_chart(canvas, ax, df, ChartType.SCATTER))
+    types_menu.add_command(label='Lines', command=lambda: draw_chart(canvas, ax, df, ChartType.PLOT))
+    types_menu.add_command(label='Pie', command=lambda: draw_chart(canvas, ax, df, ChartType.PIE))
     main_menu.add_cascade(label='Chart type', menu=types_menu)
 
     # MENÚ HELP
@@ -79,7 +78,7 @@ if __name__=='__main__':
     label_path.grid(row=0, column=0)
 
     entry_path = tk.Entry(width=80)
-    entry_path.insert(0, 'C:/Users/Profesormanana/Documents/data.csv') # TODO Eliminar
+    entry_path.insert(0, './data.csv') # TODO Eliminar
     entry_path.grid(row=0, column=1, padx=10, pady=10)
 
     button_load = tk.Button(text='Load', background='#00AA00', foreground='white', command=process_data)
