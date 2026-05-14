@@ -67,7 +67,7 @@ if __name__=='__main__':
     types_menu.add_command(label='Bars')
     types_menu.add_command(label='Points')
     types_menu.add_command(label='Pie')
-    main_menu.add_cascade(label='Graph type', menu=types_menu)
+    main_menu.add_cascade(label='Chart type', menu=types_menu)
 
     # MENÚ HELP
     help_menu=tk.Menu(tearoff=0)
